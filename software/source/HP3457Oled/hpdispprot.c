@@ -85,7 +85,7 @@ ISR(INT1_vect)
 	if (PIND & (1<<2))
 	{ // only decode when PWO signal is high
 		TCNT0 = -3; // Skip first 2 bits after SYNC edge
-		TCCR0 = (7<<1); // enable Timer 0 (precondition here is, that TCNT is -3)
+		TCCR0B = (7<<CS00); // enable Timer 0 (precondition here is, that TCNT is -3)
 		hpdp_nextiscmd = true;
 		cnt = 0;
 	}
@@ -110,7 +110,6 @@ static void hpdp_scheduledisplayupdate(void)
 // called for every received bit (occurs at a rate of about 55kHz)
 ISR(TIMER0_OVF_vect)
 {
-	bool reset_timeout = false;
 	TCNT0 = -1; // ensure that next interrupt occurs
 	if (PIND & (1<<2))
 	{ // only decode when PWO signal is high. PWO acts here similar but not exactly to an enable
@@ -152,7 +151,7 @@ ISR(TIMER0_OVF_vect)
 					default:
 						hpdp_expectedsz = 0;
 						hpdp_cmdisknown = false;
-						TCCR0 = (0<<1); // disable Timer 0, we don't process any more data
+						TCCR0B = (0); // disable Timer 0, we don't process any more data
 						break;
 				}
 			}
@@ -164,7 +163,7 @@ ISR(TIMER0_OVF_vect)
 			if ((hpdp_cmdisknown) && (hpdp_expectedsz == 0) )
 			{ // command has no payload, so turn off further data reception
 				hpdp_cmdisknown = false;
-				TCCR0 = (0<<1); // disable Timer 0, we don't process any more data
+				TCCR0B = (0); // disable Timer 0, we don't process any more data
 			}
 		}
 		else if ( (cnt >= 4) && (!hpdp_nextiscmd) )
@@ -175,7 +174,7 @@ ISR(TIMER0_OVF_vect)
 			// finished receiving a full command with payload data?
 			if (hpdp_sz >= hpdp_expectedsz)
 			{
-				TCCR0 = (0<<1); // disable Timer 0 - we received all payload data
+				TCCR0B = (0); // disable Timer 0 - we received all payload data
 				bool update_display = true;
 				// Trigger command dispatching
 				switch (hpdp_cmd)
@@ -358,27 +357,27 @@ void hpdp_init(void)
 	DDRD  &= ~( (1<<0) | (1<<3) | (1<<4) | (1<<2) ); // all pins = input
 	
 	// Enable rising edge interrupt on PD3 = SYNC
-	MCUCR |= (3<<2); // trigger INT1 on rising edge
-	GIFR  |= (1<<7); // Clear INT1 interrupt flag
-	GICR  |= (1<<7); // enable INT1 (It will stay permanently enabled)
+	EICRA |= (1 << ISC11) | (1 << ISC10); // trigger INT1 on rising edge
+	EIFR |= (1 << INTF1); // Clear INT1 interrupt flag
+	EIMSK |= (1 << INT1); // enable INT1 (It will stay permanently enabled)
 	
 	// Setup Timer 0 (Used for clock detection)
-	//TCCR0 =   (6<<1); // Clock on falling edge of O2 =PD4(T0) pin
-	TCCR0 =   (0<<1); // Clock on falling edge of O2 =PD4(T0) pin
+	// Timer 0 is started only after the SYNC edge is detected in INT1.
+	TCCR0B = 0; // disabled until command reception begins
 	TCNT0 = -3; // generate a timer interrupt after skipping 2 clock cycles
-	TIFR |= (1<<0); // clear any pending interrupt
-	TIMSK |= (1<<0); // enable timer0 overflow interrupt (an interrupt occurs when wraparround from 0xff to 0 happens)
+	TIFR0 |= (1 << TOV0); // clear any pending interrupt
+	TIMSK0 |= (1 << TOIE0); // enable timer0 overflow interrupt (an interrupt occurs when wraparround from 0xff to 0 happens)
 	
 	sei(); // global interrupt enable
 }
 
 uint8_t hpdp_update(void)
 {
-	uint8_t doupdate = (TIFR & (1<<2));
+	uint8_t doupdate = (TIFR1 & (1 << TOV1));
 	if (doupdate)
 	{
 		TCCR1B = 0; // turn timer off to avoid continous updates
-		TIFR |= (1<<2); // clear interrupt to avoid retriggers
+		TIFR1 |= (1 << TOV1); // clear interrupt to avoid retriggers
 		doupdate = hpdp_updateflag;
 		hpdp_updateflag ^= doupdate;
 		if (doupdate)

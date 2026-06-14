@@ -97,7 +97,7 @@ const uint16_t hp_charset[] PROGMEM =
 	Da|Dm|Dr|Dt,            //73 : hourglass (3/5)
 	Da|Dm|Dr|Dt|Dg1,        //74 : hourglass (4/5)
 	Da|Dm|Dr|Dt|Dg1|Dg2,    //75 : hourglass (5/5)
-	Db|Dg2|Dm|Dr,           //76 : µ
+	Db|Dg2|Dm|Dr,           //76 : Âµ
 	Dd|Dg1|Dg2|Dn|Dr,       //77 : =/= (not equal)
 	Da|Dd|Dk|Dr,            //78 : SIGMA sign
 	Dd|Dn|Dr|Ds             //79 : antenna ?

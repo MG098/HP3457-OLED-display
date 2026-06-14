@@ -1,3 +1,8 @@
 
 hardware/eagle/jlcpcb_2_layer_v6.cam
 *.db
+fp-info-cache
+*.kicad_prl
+fp-lib-table
+sym-lib-table
+*-backups

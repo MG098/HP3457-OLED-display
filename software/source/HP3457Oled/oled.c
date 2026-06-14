@@ -1,4 +1,3 @@
-
 #include "oled.h"
 #include <avr/io.h>
 #include <util/delay.h>
@@ -107,7 +106,7 @@ static void ssd1306_init(void)
 	pari2c_writebyte_bc(0x20);
 
 	pari2c_writebyte_bc(0x8d);//--set vcomh
-	pari2c_writebyte_bc(0x10); // EXTERNAL VCC
+	pari2c_writebyte_bc(0x14); // INTERNAL VCC
 
 	pari2c_writebyte_bc(0xa6);//--set normal display
 

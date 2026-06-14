@@ -24,7 +24,6 @@ int main(void)
 	DDRD &= ~(1<<3);
 	DDRD |= (1<<5);
 	
-	uint16_t i=0;
     while (1) 
     {
 		uint8_t update = hpdp_update();
