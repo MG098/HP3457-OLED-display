@@ -10,14 +10,14 @@ I've also repladced the more uncommon ATMega8L with a very common ATMega328p.
 The board is still fully compatibile with ATMega8L, however there are come changes in the code that needed to be made.
 Below are the pictures for this simplified board:
 
-<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/Display_Frontside.png?raw=true" width="40%"/>
-<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/Display_Backside.png?raw=true" width="40%"/>
+<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/Display_Frontside.png?raw=true" width="80%"/>
+<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/Display_Backside.png?raw=true" width="80%"/>
 
 # The final result:
 
 I've added a bit of acryllic glass to hide the space between the digits.
 
-<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/annuciators_icons.png?raw=true" width="40%"/>
+<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/annuciators_icons.png?raw=true" width="80%"/>
 
 # Building the display yourself:
 
@@ -42,6 +42,6 @@ The display is using the same 5V provided by the multimeter through the ribbon c
 However, 5V into the display is connected through 1K resistor that would need to shorted, otherwise the voltage drop becomes too large.
 Shown below is the resistor in question (R615), located right next to the ribbon cable connector.
 
-<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/PowerConnection.png?raw=true" width="40%"/>
+<img src="https://github.com/MG098/HP3457-OLED-display/blob/main/photos/PowerConnection.png?raw=true" width="80%"/>
 
 
